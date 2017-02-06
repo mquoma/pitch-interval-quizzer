@@ -185,7 +185,7 @@ save model =
 view : Model -> Html Msg
 view model =
     div [ class "scoreboard" ]
-        [ h1 [] [ text "Scorekeeper" ]
+        [ h1 [] [ text "Scorekeeper: " ]
         , playerSection model
         , playerForm model
         , playsHeader

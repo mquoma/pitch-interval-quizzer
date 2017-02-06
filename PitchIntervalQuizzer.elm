@@ -105,7 +105,7 @@ view model =
             "audio/" ++ (toString (model.pick)) ++ ".mp3"
     in
         div [ class "scoreboard" ]
-            [ h1 [] [ text "Pitch Interval Quizzer v1.01" ]
+            [ h4 [] [ text "Pitch Interval Quizzer v1.02" ]
             , audio
                 [ src url
                 , controls True
