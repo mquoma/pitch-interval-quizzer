@@ -5,7 +5,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Array exposing (..)
 import Random
-import Scorecard
+import ToneArray
 
 
 -- Model
@@ -160,11 +160,11 @@ tone t =
         ]
 
 
-answer : Int -> Html Msg
-answer a =
+answer : Int -> String -> Html Msg
+answer id label =
     span [ style [] ]
-        [ button [ onClick (SetUserGuess a) ]
-            [ text (toString a) ]
+        [ button [ onClick (SetUserGuess id) ]
+            [ text (label) ]
         ]
 
 
@@ -180,7 +180,10 @@ answers model =
                     ( id, tones, label ) =
                         c
                 in
-                    answer id
+                    div []
+                        [ answer id label
+                        , br [] []
+                        ]
             )
             tones
             |> div []

@@ -1,5 +1,7 @@
 'use strict';
 
+console.log('gulp');
+
 var gulp = require('gulp'),
   http = require('http'),
   st = require('st'),
@@ -17,6 +19,9 @@ gulp.task('watch', function(cb) {
 });
 
 gulp.task('server', function(done) {
+
+  console.log('server');
+
   gutil.log(gutil.colors.blue('Starting server at http://localhost:4000'));
   http.createServer(
     st({
@@ -28,10 +33,14 @@ gulp.task('server', function(done) {
 });
 
 gulp.task('elm', function(cb) {
+
+  console.log('task');
+
   if (counter > 0){
     clear();
   }
   exec(cmd, function(err, stdout, stderr) {
+    console.log('exec');
     if (err){
       gutil.log(gutil.colors.red('elm make: '),gutil.colors.red(stderr));
     } else {
