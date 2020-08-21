@@ -1,21 +1,49 @@
 module PitchIntervalQuizzer exposing (..)
 
+<<<<<<< HEAD
 import Browser exposing (..)
+=======
+>>>>>>> f9c3d6d63ce1de79327f04ce02eeac3340881af6
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Array exposing (..)
 import Random
+<<<<<<< HEAD
 
 
 type alias Model =
     { toneArray : Array Tone
+=======
+import Scorecard
+
+
+-- Model
+
+
+toneArray =
+    Array.fromList
+        [ ( 1, ( 'C', 'C' ), "Octave" )
+        , ( 2, ( 'C', 'D' ), "Second" )
+        , ( 3, ( 'C', 'E' ), "Major Third" )
+        , ( 4, ( 'C', 'F' ), "Fourth" )
+        , ( 5, ( 'C', 'G' ), "Fifth" )
+        , ( 6, ( 'C', 'A' ), "Major Sixth" )
+        , ( 7, ( 'C', 'B' ), "Major Seventh" )
+        ]
+
+
+type alias Model =
+    { toneArray : Array ( Int, ( Char, Char ), String )
+    , playStatus : Bool
+>>>>>>> f9c3d6d63ce1de79327f04ce02eeac3340881af6
     , pick : Int
     , userPick : Int
     , displayMessage : String
     , score : Int
     }
 
+<<<<<<< HEAD
 type alias Tone =
     { index : Int
     , tones : (Char, Char)
@@ -39,6 +67,13 @@ toneArray =
 init: () -> (Model, Cmd msg)
 init i =
     ( { toneArray = toneArray
+=======
+
+initModel : ( Model, Cmd Msg )
+initModel =
+    ( { toneArray = toneArray
+      , playStatus = False
+>>>>>>> f9c3d6d63ce1de79327f04ce02eeac3340881af6
       , pick = 1
       , userPick = 0
       , displayMessage = ""
@@ -49,8 +84,17 @@ init i =
 
 
 
+<<<<<<< HEAD
 type Msg
     = SetUserGuess Int
+=======
+-- UPDATE
+
+
+type Msg
+    = Play
+    | SetUserGuess Int
+>>>>>>> f9c3d6d63ce1de79327f04ce02eeac3340881af6
     | RequestNewTones
     | SetNewTones Int
 
@@ -58,6 +102,7 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+<<<<<<< HEAD
 
         SetUserGuess guess ->
             case guess == model.pick of
@@ -71,6 +116,29 @@ update msg model =
                         { model | userPick = guess, displayMessage = "NO.", score = model.score - 1 }, 
                         Cmd.none 
                     )
+=======
+        Play ->
+            ( model, Cmd.none )
+
+        SetUserGuess guess ->
+            let
+                guessId =
+                    guess
+
+                msg =
+                    if (guessId == model.pick) then
+                        "yes!"
+                    else
+                        "no."
+
+                points =
+                    if (guessId == model.pick) then
+                        1
+                    else
+                        -1
+            in
+                ( { model | userPick = guess, displayMessage = msg, score = model.score + points }, Cmd.none )
+>>>>>>> f9c3d6d63ce1de79327f04ce02eeac3340881af6
 
         RequestNewTones ->
             ( model, generateRandom )
@@ -79,17 +147,35 @@ update msg model =
             ( { model | pick = n, userPick = 0, displayMessage = "" }, Cmd.none )
 
 
+<<<<<<< HEAD
 
+generateRandom : Cmd Msg
+generateRandom =
+    Random.generate SetNewTones (Random.int 1 ((length toneArray)))
+    |> Debug.log "this"
+
+
+
+=======
 generateRandom : Cmd Msg
 generateRandom =
     Random.generate SetNewTones (Random.int 1 ((length toneArray)))
 
 
+
+-- VIEW
+
+
+>>>>>>> f9c3d6d63ce1de79327f04ce02eeac3340881af6
 view : Model -> Html Msg
 view model =
     let
         url =
+<<<<<<< HEAD
             "audio/" ++ (String.fromInt (model.pick)) ++ ".mp3"
+=======
+            "audio/" ++ (toString (model.pick)) ++ ".mp3"
+>>>>>>> f9c3d6d63ce1de79327f04ce02eeac3340881af6
     in
         div [ class "scoreboard" ]
             [ h4 [] [ text "Pitch Interval Quizzer v1.02" ]
@@ -102,14 +188,22 @@ view model =
               --            , div [] [ displayPick model model.pick ]
               --            , div [] [ text (toString model.pick) ]
               --, div [] [ text (toString model.userPick) ]
+<<<<<<< HEAD
             , renderAnswers model
+=======
+            , answers model
+>>>>>>> f9c3d6d63ce1de79327f04ce02eeac3340881af6
             , button
                 [ type_ "button"
                 , onClick (RequestNewTones)
                 ]
-                [ text "NEXT MOVE" ]
+                [ text "Next" ]
             , div [] [ text (model.displayMessage) ]
+<<<<<<< HEAD
             , div [] [ text ("Score: " ++ (String.fromInt model.score)) ]
+=======
+            , div [] [ text ("Score: " ++ (toString model.score)) ]
+>>>>>>> f9c3d6d63ce1de79327f04ce02eeac3340881af6
             ]
 
 
@@ -118,6 +212,7 @@ displayPick model p =
     let
         member =
             (get p (model.toneArray))
+<<<<<<< HEAD
             |> Maybe.withDefault (Tone 0 ( ' ', ' ' ) "" )
 
         ( low, high ) =
@@ -153,6 +248,65 @@ renderAnswers model =
     |> List.map renderAnswer 
     |> div []
 
+=======
+
+        tuple =
+            case member of
+                Nothing ->
+                    ( 0, ( ' ', ' ' ), "" )
+
+                Just a ->
+                    a
+
+        ( id, tones, label ) =
+            tuple
+
+        ( low, high ) =
+            tones
+    in
+        div []
+            [ div [] [ text (toString id) ]
+            , div [] [ text (toString low) ]
+            , div [] [ text (toString high) ]
+            ]
+
+
+tone : Int -> Html Msg
+tone t =
+    li []
+        [ text (toString t)
+        ]
+
+
+answer : Int -> Html Msg
+answer a =
+    span [ style [] ]
+        [ button [ onClick (SetUserGuess a) ]
+            [ text (toString a) ]
+        ]
+
+
+answers : Model -> Html Msg
+answers model =
+    let
+        tones =
+            toList model.toneArray
+    in
+        List.map
+            (\c ->
+                let
+                    ( id, tones, label ) =
+                        c
+                in
+                    answer id
+            )
+            tones
+            |> div []
+
+
+
+-- subscriptions
+>>>>>>> f9c3d6d63ce1de79327f04ce02eeac3340881af6
 
 
 subscriptions : Model -> Sub Msg
@@ -160,10 +314,20 @@ subscriptions model =
     Sub.none
 
 
+<<<<<<< HEAD
 main =
   Browser.element 
         { init = init
         , subscriptions = \_ -> Sub.none
         , update = update
         , view = view
+=======
+main : Program Never Model Msg
+main =
+    Html.program
+        { init = initModel
+        , view = view
+        , update = update
+        , subscriptions = subscriptions
+>>>>>>> f9c3d6d63ce1de79327f04ce02eeac3340881af6
         }

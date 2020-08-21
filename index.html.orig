@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -5519,13 +5520,17 @@ var $elm$core$Array$length = function (_v0) {
 	var len = _v0.a;
 	return len;
 };
+var $elm$core$Debug$log = _Debug_log;
 var $author$project$PitchIntervalQuizzer$generateRandom = A2(
-	$elm$random$Random$generate,
-	$author$project$PitchIntervalQuizzer$SetNewTones,
+	$elm$core$Debug$log,
+	'this',
 	A2(
-		$elm$random$Random$int,
-		1,
-		$elm$core$Array$length($author$project$PitchIntervalQuizzer$toneArray)));
+		$elm$random$Random$generate,
+		$author$project$PitchIntervalQuizzer$SetNewTones,
+		A2(
+			$elm$random$Random$int,
+			1,
+			$elm$core$Array$length($author$project$PitchIntervalQuizzer$toneArray))));
 var $author$project$PitchIntervalQuizzer$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -5674,7 +5679,7 @@ var $author$project$PitchIntervalQuizzer$view = function (model) {
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('NEXT MOVE')
+						$elm$html$Html$text('Next')
 					])),
 				A2(
 				$elm$html$Html$div,
@@ -5722,3 +5727,24 @@ catch (e)
 
 </body>
 </html>
+=======
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pitch Interval Quizzer</title>
+  <link rel="stylesheet" href="app.css">
+</head>
+
+<body>
+  <div id="app"></div>
+  <script src="bundle.js"></script>
+  <script>
+    var app = Elm.PitchIntervalQuizzer.embed(document.getElementById("app"));
+  </script>
+</body>
+
+</html>
+>>>>>>> f9c3d6d63ce1de79327f04ce02eeac3340881af6
