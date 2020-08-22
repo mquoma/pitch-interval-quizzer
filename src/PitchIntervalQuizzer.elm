@@ -2,47 +2,68 @@ port module PitchIntervalQuizzer exposing (..)
 
 import Browser exposing (element)
 import Html exposing (Html, div, h4, text, button, audio, li, span)
-import Html.Attributes exposing (class, type_, autoplay, controls, src)
+import Html.Attributes exposing (class, type_, value, for, name, checked, autoplay, controls, src)
 import Html.Events exposing (onClick)
 import Array exposing (..)
 import Random
 
+type TuningMode = Pure | Mean
 
 type alias Model =
     { toneArray : Array Tone
-    , pick : Int
-    , userPick : Int
+    , actualAnswer : Float
+    , userAnswer : Float
     , displayMessage : String
     , score : Int
+    , tuningMode : TuningMode
     }
 
 type alias Tone =
-    { index : Int
-    , tones : (Char, Char)
-    , label : String
+    { tones : (Char, Char)
+    , ratio : Float
+    , intervalName : String
     }
 
-toneArray =
+meanTones =
     Array.fromList
-        [ Tone 1 ( 'C', 'C' ) "Octave" 
-        , Tone 2 ( 'C', 'D' ) "Second" 
-        , Tone 3 ( 'C', 'E' ) "Major Third" 
-        , Tone 4 ( 'C', 'F' ) "Fourth" 
-        , Tone 5 ( 'C', 'G' ) "Fifth" 
-        , Tone 6 ( 'C', 'A' ) "Major Sixth" 
-        , Tone 7 ( 'C', 'B' ) "Major Seventh" 
-        , Tone 8 ( 'D', 'F' ) "Minor Third" 
-        , Tone 9 ( 'E', 'C' ) "Minor Sixth"
-        , Tone 10 ( 'F', 'B' ) "TRITONE!" 
+        [ Tone ( 'C', 'D' ) ( 2 ^ ( 1 / 12 ) ) "Minor Second"
+        , Tone ( 'C', 'D' ) ( 2 ^ ( 2 / 12 ) ) "Major Second"
+        , Tone ( 'D', 'F' ) ( 2 ^ ( 3 / 12 ) ) "Minor Third"
+        , Tone ( 'C', 'E' ) ( 2 ^ ( 4 / 12 ) ) "Major Third"
+        , Tone ( 'C', 'F' ) ( 2 ^ ( 5 / 12 ) ) "Fourth"
+        , Tone ( 'F', 'B' ) ( 2 ^ ( 6 / 12 ) ) "TRITONE!"
+        , Tone ( 'C', 'G' ) ( 2 ^ ( 7 / 12 ) ) "Fifth"
+        , Tone ( 'E', 'C' ) ( 2 ^ ( 8 / 12 ) ) "Minor Sixth"
+        , Tone ( 'C', 'A' ) ( 2 ^ ( 9 / 12 ) ) "Major Sixth"
+        , Tone ( 'C', 'A' ) ( 2 ^ ( 10 / 12 ) ) "Minor Seventh"
+        , Tone ( 'C', 'B' ) ( 2 ^ ( 11 / 12 ) ) "Major Seventh"
+        , Tone ( 'C', 'C' ) ( 2 ^ ( 12 / 12 ) ) "Octave"
+        ]
+
+pureTones =
+    Array.fromList
+        [ Tone ( 'C', 'D' ) ( 9 / 8 ) "Minor Second" 
+        , Tone ( 'C', 'D' ) ( 9 / 8 ) "Major Second" 
+        , Tone ( 'D', 'F' ) ( 6 / 5 ) "Minor Third" 
+        , Tone ( 'C', 'E' ) ( 5 / 4 ) "Major Third" 
+        , Tone ( 'C', 'F' ) ( 4 / 3 ) "Fourth" 
+        , Tone ( 'F', 'B' ) ( 45 / 32 ) "TRITONE!" 
+        , Tone ( 'C', 'G' ) ( 3 / 2 ) "Fifth" 
+        , Tone ( 'E', 'C' ) ( 8 / 5 ) "Minor Sixth"
+        , Tone ( 'C', 'A' ) ( 5 / 3 ) "Major Sixth" 
+        , Tone ( 'C', 'A' ) ( 5 / 3 ) "Minor Seventh" 
+        , Tone ( 'C', 'B' ) ( 15 / 8 ) "Major Seventh" 
+        , Tone ( 'C', 'C' ) ( 2 / 1) "Octave" 
         ]
 
 init: () -> (Model, Cmd msg)
 init i =
-    ( { toneArray = toneArray
-      , pick = 1
-      , userPick = 0
+    ( { toneArray = meanTones
+      , actualAnswer = 1 / 1
+      , userAnswer = 0.0
       , displayMessage = ""
       , score = 0
+      , tuningMode = Mean
       }
     , Cmd.none
     )
@@ -50,7 +71,7 @@ init i =
 
 
 type Msg
-    = SetUserGuess Int
+    = SetUserGuess Float
     | RequestNewInterval
     | SetNewInterval Int
 
@@ -60,85 +81,80 @@ update msg model =
     case msg of
 
         SetUserGuess guess ->
-            if guess == model.pick then
+            if guess == model.actualAnswer then
 
                     ( 
-                        { model | userPick = guess, displayMessage = "YES.", score = model.score + 1 }, 
+                        { model | displayMessage = "YES.", score = model.score + 1 }, 
                         Cmd.none 
                     )
                 else
 
                     ( 
-                        { model | userPick = guess, displayMessage = "NO.", score = model.score - 1 }, 
+                        { model |  displayMessage = "NO.", score = model.score - 1 }, 
                         Cmd.none
                     )
 
         RequestNewInterval ->
-            ( model, generateRandomInterval )
+            ( model, generateRandomInterval (length model.toneArray) )
 
         SetNewInterval interval ->
-            ( { model | pick = interval, userPick = 0, displayMessage = "" }, sineWave (1.0, 7/4) )
+            
+            let 
+        
+                tone =
+                    (get (interval - 1) (model.toneArray))
+
+                actual = 
+                    case tone of    
+                        Nothing -> 
+                            0.0
+                        Just x ->
+                            x.ratio
+                    
+
+            in
+            ( { model | actualAnswer = actual, userAnswer = 0.0, displayMessage = "" }, sineWave (1.0, actual) )
 
 
 
-generateRandomInterval : Cmd Msg
-generateRandomInterval =
-    Random.int 1 (length toneArray)
+generateRandomInterval : Int -> Cmd Msg
+generateRandomInterval len =
+    Random.int 1 len
     |> Random.generate SetNewInterval 
 
 
 view : Model -> Html Msg
 view model =
-    let
-        url =
-            "audio/" ++ (String.fromInt (model.pick)) ++ ".mp3"
-    in
         div [ class "scoreboard" ]
-            [ h4 [] [ text "Pitch Interval Quizzer v1.02" ]
-            , audio
-                [ src url
-                , controls True
-                , autoplay True
-                ]
-                []
-              --            , div [] [ displayPick model model.pick ]
-              --            , div [] [ text (toString model.pick) ]
-              --, div [] [ text (toString model.userPick) ]
+            [ h4 [] [ text "Pitch Interval Quizzer v1.03" ]
+            , renderTuningMode model
             , renderAnswers model
             , button
                 [ type_ "button"
                 , onClick RequestNewInterval
                 ]
-                [ text "NEXT MOVE" ]
-            , div [] [ text model.displayMessage]
+                [ text "GO AGAIN!" ]
+            , Html.h1 [] [ text model.displayMessage]
             , div [] [ text ("Score: " ++ String.fromInt model.score) ]
             ]
 
 
-displayPick : Model -> Int -> Html Msg
-displayPick model p =
-    let
-        member =
-            (get p (model.toneArray))
-            |> Maybe.withDefault (Tone 0 ( ' ', ' ' ) "" )
-
-        ( low, high ) =
-            member.tones
-    in
-        div []
-            [ div [] [ text (String.fromInt member.index) ]
-            , div [] [ text ( String.fromChar low) ]
-            , div [] [ text ( String.fromChar high) ]
-            ]
-
 renderAnswer : Tone -> Html Msg
-renderAnswer {index, label} =
+renderAnswer {ratio, intervalName} =
     span []
-        [ button [ onClick (SetUserGuess index) ]
-            [ text label ]
+        [ button [ onClick (SetUserGuess ratio) ]
+            [ text intervalName ]
         ]
 
 
+renderTuningMode : Model -> Html Msg
+renderTuningMode model = 
+    div [] [
+        Html.label [for "tuningMode"] [text "Pure intonation"]
+        , Html.input [ type_ "radio", name "tuningMode", value "pure", checked (model.tuningMode == Pure)] []
+        , Html.label [for "tuningMode"] [text "Mean intonation"]
+        , Html.input [ type_ "radio", name "tuningMode", value "mean", checked (model.tuningMode == Mean)] []
+    ]
 renderAnswers : Model -> Html Msg
 renderAnswers model =
 

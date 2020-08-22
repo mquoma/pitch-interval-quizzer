@@ -6,13 +6,15 @@
 	<title>PitchIntervalQuizzer</title>
 	<style>
 		body {
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: medium;
 			padding: 0;
 			margin: 0;
 		}
 	</style>
 </head>
 
-<body style="background-color: blueviolet;">
+<body style="background-color:thistle">
 	<div id="elm"></div>
 </body>
 <script src="app.js"></script>
@@ -30,6 +32,7 @@
 	function sineWave([a, b]) {
 
 		console.log(a)
+		console.log(b)
 
 
 		const root = 440;
@@ -45,12 +48,12 @@
 		sine1.start();
 
 		var gainNode = audioCtx.createGain();
-		gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+		gainNode.gain.setValueAtTime(0.25, audioCtx.currentTime);
 		gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 2);
 		sine.stop(audioCtx.currentTime + 2);
 
 		var gainNode1 = audioCtx.createGain();
-		gainNode1.gain.setValueAtTime(0.5, audioCtx.currentTime);
+		gainNode1.gain.setValueAtTime(0.25, audioCtx.currentTime);
 		gainNode1.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 2);
 		sine1.stop(audioCtx.currentTime + 2);
 

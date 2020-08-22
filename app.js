@@ -5227,11 +5227,10 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$element = _Browser_element;
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $author$project$PitchIntervalQuizzer$Mean = {$: 'Mean'};
 var $author$project$PitchIntervalQuizzer$Tone = F3(
-	function (index, tones, label) {
-		return {index: index, label: label, tones: tones};
+	function (tones, ratio, intervalName) {
+		return {intervalName: intervalName, ratio: ratio, tones: tones};
 	});
 var $elm$core$Array$fromListHelp = F3(
 	function (list, nodeList, nodeListSize) {
@@ -5268,83 +5267,100 @@ var $elm$core$Array$fromList = function (list) {
 		return A3($elm$core$Array$fromListHelp, list, _List_Nil, 0);
 	}
 };
-var $author$project$PitchIntervalQuizzer$toneArray = $elm$core$Array$fromList(
+var $elm$core$Basics$pow = _Basics_pow;
+var $author$project$PitchIntervalQuizzer$meanTones = $elm$core$Array$fromList(
 	_List_fromArray(
 		[
 			A3(
 			$author$project$PitchIntervalQuizzer$Tone,
-			1,
-			_Utils_Tuple2(
-				_Utils_chr('C'),
-				_Utils_chr('C')),
-			'Octave'),
-			A3(
-			$author$project$PitchIntervalQuizzer$Tone,
-			2,
 			_Utils_Tuple2(
 				_Utils_chr('C'),
 				_Utils_chr('D')),
-			'Second'),
+			A2($elm$core$Basics$pow, 2, 1 / 12),
+			'Minor Second'),
 			A3(
 			$author$project$PitchIntervalQuizzer$Tone,
-			3,
 			_Utils_Tuple2(
 				_Utils_chr('C'),
-				_Utils_chr('E')),
-			'Major Third'),
+				_Utils_chr('D')),
+			A2($elm$core$Basics$pow, 2, 2 / 12),
+			'Major Second'),
 			A3(
 			$author$project$PitchIntervalQuizzer$Tone,
-			4,
-			_Utils_Tuple2(
-				_Utils_chr('C'),
-				_Utils_chr('F')),
-			'Fourth'),
-			A3(
-			$author$project$PitchIntervalQuizzer$Tone,
-			5,
-			_Utils_Tuple2(
-				_Utils_chr('C'),
-				_Utils_chr('G')),
-			'Fifth'),
-			A3(
-			$author$project$PitchIntervalQuizzer$Tone,
-			6,
-			_Utils_Tuple2(
-				_Utils_chr('C'),
-				_Utils_chr('A')),
-			'Major Sixth'),
-			A3(
-			$author$project$PitchIntervalQuizzer$Tone,
-			7,
-			_Utils_Tuple2(
-				_Utils_chr('C'),
-				_Utils_chr('B')),
-			'Major Seventh'),
-			A3(
-			$author$project$PitchIntervalQuizzer$Tone,
-			8,
 			_Utils_Tuple2(
 				_Utils_chr('D'),
 				_Utils_chr('F')),
+			A2($elm$core$Basics$pow, 2, 3 / 12),
 			'Minor Third'),
 			A3(
 			$author$project$PitchIntervalQuizzer$Tone,
-			9,
 			_Utils_Tuple2(
-				_Utils_chr('E'),
-				_Utils_chr('C')),
-			'Minor Sixth'),
+				_Utils_chr('C'),
+				_Utils_chr('E')),
+			A2($elm$core$Basics$pow, 2, 4 / 12),
+			'Major Third'),
 			A3(
 			$author$project$PitchIntervalQuizzer$Tone,
-			10,
+			_Utils_Tuple2(
+				_Utils_chr('C'),
+				_Utils_chr('F')),
+			A2($elm$core$Basics$pow, 2, 5 / 12),
+			'Fourth'),
+			A3(
+			$author$project$PitchIntervalQuizzer$Tone,
 			_Utils_Tuple2(
 				_Utils_chr('F'),
 				_Utils_chr('B')),
-			'TRITONE!')
+			A2($elm$core$Basics$pow, 2, 6 / 12),
+			'TRITONE!'),
+			A3(
+			$author$project$PitchIntervalQuizzer$Tone,
+			_Utils_Tuple2(
+				_Utils_chr('C'),
+				_Utils_chr('G')),
+			A2($elm$core$Basics$pow, 2, 7 / 12),
+			'Fifth'),
+			A3(
+			$author$project$PitchIntervalQuizzer$Tone,
+			_Utils_Tuple2(
+				_Utils_chr('E'),
+				_Utils_chr('C')),
+			A2($elm$core$Basics$pow, 2, 8 / 12),
+			'Minor Sixth'),
+			A3(
+			$author$project$PitchIntervalQuizzer$Tone,
+			_Utils_Tuple2(
+				_Utils_chr('C'),
+				_Utils_chr('A')),
+			A2($elm$core$Basics$pow, 2, 9 / 12),
+			'Major Sixth'),
+			A3(
+			$author$project$PitchIntervalQuizzer$Tone,
+			_Utils_Tuple2(
+				_Utils_chr('C'),
+				_Utils_chr('A')),
+			A2($elm$core$Basics$pow, 2, 10 / 12),
+			'Minor Seventh'),
+			A3(
+			$author$project$PitchIntervalQuizzer$Tone,
+			_Utils_Tuple2(
+				_Utils_chr('C'),
+				_Utils_chr('B')),
+			A2($elm$core$Basics$pow, 2, 11 / 12),
+			'Major Seventh'),
+			A3(
+			$author$project$PitchIntervalQuizzer$Tone,
+			_Utils_Tuple2(
+				_Utils_chr('C'),
+				_Utils_chr('C')),
+			A2($elm$core$Basics$pow, 2, 12 / 12),
+			'Octave')
 		]));
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$PitchIntervalQuizzer$init = function (i) {
 	return _Utils_Tuple2(
-		{displayMessage: '', pick: 1, score: 0, toneArray: $author$project$PitchIntervalQuizzer$toneArray, userPick: 0},
+		{actualAnswer: 1 / 1, displayMessage: '', score: 0, toneArray: $author$project$PitchIntervalQuizzer$meanTones, tuningMode: $author$project$PitchIntervalQuizzer$Mean, userAnswer: 0.0},
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5501,17 +5517,56 @@ var $elm$random$Random$int = F2(
 				}
 			});
 	});
+var $author$project$PitchIntervalQuizzer$generateRandomInterval = function (len) {
+	return A2(
+		$elm$random$Random$generate,
+		$author$project$PitchIntervalQuizzer$SetNewInterval,
+		A2($elm$random$Random$int, 1, len));
+};
+var $elm$core$Array$bitMask = 4294967295 >>> (32 - $elm$core$Array$shiftStep);
+var $elm$core$Basics$ge = _Utils_ge;
+var $elm$core$Elm$JsArray$unsafeGet = _JsArray_unsafeGet;
+var $elm$core$Array$getHelp = F3(
+	function (shift, index, tree) {
+		getHelp:
+		while (true) {
+			var pos = $elm$core$Array$bitMask & (index >>> shift);
+			var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, pos, tree);
+			if (_v0.$ === 'SubTree') {
+				var subTree = _v0.a;
+				var $temp$shift = shift - $elm$core$Array$shiftStep,
+					$temp$index = index,
+					$temp$tree = subTree;
+				shift = $temp$shift;
+				index = $temp$index;
+				tree = $temp$tree;
+				continue getHelp;
+			} else {
+				var values = _v0.a;
+				return A2($elm$core$Elm$JsArray$unsafeGet, $elm$core$Array$bitMask & index, values);
+			}
+		}
+	});
+var $elm$core$Bitwise$shiftLeftBy = _Bitwise_shiftLeftBy;
+var $elm$core$Array$tailIndex = function (len) {
+	return (len >>> 5) << 5;
+};
+var $elm$core$Array$get = F2(
+	function (index, _v0) {
+		var len = _v0.a;
+		var startShift = _v0.b;
+		var tree = _v0.c;
+		var tail = _v0.d;
+		return ((index < 0) || (_Utils_cmp(index, len) > -1)) ? $elm$core$Maybe$Nothing : ((_Utils_cmp(
+			index,
+			$elm$core$Array$tailIndex(len)) > -1) ? $elm$core$Maybe$Just(
+			A2($elm$core$Elm$JsArray$unsafeGet, $elm$core$Array$bitMask & index, tail)) : $elm$core$Maybe$Just(
+			A3($elm$core$Array$getHelp, startShift, index, tree)));
+	});
 var $elm$core$Array$length = function (_v0) {
 	var len = _v0.a;
 	return len;
 };
-var $author$project$PitchIntervalQuizzer$generateRandomInterval = A2(
-	$elm$random$Random$generate,
-	$author$project$PitchIntervalQuizzer$SetNewInterval,
-	A2(
-		$elm$random$Random$int,
-		1,
-		$elm$core$Array$length($author$project$PitchIntervalQuizzer$toneArray)));
 var $elm$json$Json$Encode$float = _Json_wrap;
 var $elm$json$Json$Encode$list = F2(
 	function (func, entries) {
@@ -5541,38 +5596,40 @@ var $author$project$PitchIntervalQuizzer$update = F2(
 		switch (msg.$) {
 			case 'SetUserGuess':
 				var guess = msg.a;
-				return _Utils_eq(guess, model.pick) ? _Utils_Tuple2(
+				return _Utils_eq(guess, model.actualAnswer) ? _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{displayMessage: 'YES.', score: model.score + 1, userPick: guess}),
+						{displayMessage: 'YES.', score: model.score + 1}),
 					$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{displayMessage: 'NO.', score: model.score - 1, userPick: guess}),
+						{displayMessage: 'NO.', score: model.score - 1}),
 					$elm$core$Platform$Cmd$none);
 			case 'RequestNewInterval':
-				return _Utils_Tuple2(model, $author$project$PitchIntervalQuizzer$generateRandomInterval);
+				return _Utils_Tuple2(
+					model,
+					$author$project$PitchIntervalQuizzer$generateRandomInterval(
+						$elm$core$Array$length(model.toneArray)));
 			default:
 				var interval = msg.a;
+				var tone = A2($elm$core$Array$get, interval - 1, model.toneArray);
+				var actual = function () {
+					if (tone.$ === 'Nothing') {
+						return 0.0;
+					} else {
+						var x = tone.a;
+						return x.ratio;
+					}
+				}();
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{displayMessage: '', pick: interval, userPick: 0}),
+						{actualAnswer: actual, displayMessage: '', userAnswer: 0.0}),
 					$author$project$PitchIntervalQuizzer$sineWave(
-						_Utils_Tuple2(1.0, 7 / 4)));
+						_Utils_Tuple2(1.0, actual)));
 		}
 	});
 var $author$project$PitchIntervalQuizzer$RequestNewInterval = {$: 'RequestNewInterval'};
-var $elm$html$Html$audio = _VirtualDom_node('audio');
-var $elm$json$Json$Encode$bool = _Json_wrap;
-var $elm$html$Html$Attributes$boolProperty = F2(
-	function (key, bool) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			$elm$json$Json$Encode$bool(bool));
-	});
-var $elm$html$Html$Attributes$autoplay = $elm$html$Html$Attributes$boolProperty('autoplay');
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
@@ -5583,8 +5640,8 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			$elm$json$Json$Encode$string(string));
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
-var $elm$html$Html$Attributes$controls = $elm$html$Html$Attributes$boolProperty('controls');
 var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$html$Html$h4 = _VirtualDom_node('h4');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
@@ -5610,8 +5667,8 @@ var $elm$html$Html$span = _VirtualDom_node('span');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $author$project$PitchIntervalQuizzer$renderAnswer = function (_v0) {
-	var index = _v0.index;
-	var label = _v0.label;
+	var ratio = _v0.ratio;
+	var intervalName = _v0.intervalName;
 	return A2(
 		$elm$html$Html$span,
 		_List_Nil,
@@ -5622,11 +5679,11 @@ var $author$project$PitchIntervalQuizzer$renderAnswer = function (_v0) {
 				_List_fromArray(
 					[
 						$elm$html$Html$Events$onClick(
-						$author$project$PitchIntervalQuizzer$SetUserGuess(index))
+						$author$project$PitchIntervalQuizzer$SetUserGuess(ratio))
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text(label)
+						$elm$html$Html$text(intervalName)
 					]))
 			]));
 };
@@ -5639,15 +5696,70 @@ var $author$project$PitchIntervalQuizzer$renderAnswers = function (model) {
 			$author$project$PitchIntervalQuizzer$renderAnswer,
 			$elm$core$Array$toList(model.toneArray)));
 };
-var $elm$html$Html$Attributes$src = function (url) {
-	return A2(
-		$elm$html$Html$Attributes$stringProperty,
-		'src',
-		_VirtualDom_noJavaScriptOrHtmlUri(url));
-};
+var $author$project$PitchIntervalQuizzer$Pure = {$: 'Pure'};
+var $elm$json$Json$Encode$bool = _Json_wrap;
+var $elm$html$Html$Attributes$boolProperty = F2(
+	function (key, bool) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$bool(bool));
+	});
+var $elm$html$Html$Attributes$checked = $elm$html$Html$Attributes$boolProperty('checked');
+var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
+var $elm$html$Html$input = _VirtualDom_node('input');
+var $elm$html$Html$label = _VirtualDom_node('label');
+var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
+var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $author$project$PitchIntervalQuizzer$renderTuningMode = function (model) {
+	return A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$label,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$for('tuningMode')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Pure intonation')
+					])),
+				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$type_('radio'),
+						$elm$html$Html$Attributes$name('tuningMode'),
+						$elm$html$Html$Attributes$value('pure'),
+						$elm$html$Html$Attributes$checked(
+						_Utils_eq(model.tuningMode, $author$project$PitchIntervalQuizzer$Pure))
+					]),
+				_List_Nil),
+				A2(
+				$elm$html$Html$label,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Mean intonation')
+					])),
+				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$type_('radio'),
+						$elm$html$Html$Attributes$name('tuningMode'),
+						$elm$html$Html$Attributes$value('mean'),
+						$elm$html$Html$Attributes$checked(
+						_Utils_eq(model.tuningMode, $author$project$PitchIntervalQuizzer$Mean))
+					]),
+				_List_Nil)
+			]));
+};
 var $author$project$PitchIntervalQuizzer$view = function (model) {
-	var url = 'audio/' + ($elm$core$String$fromInt(model.pick) + '.mp3');
 	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
@@ -5661,17 +5773,9 @@ var $author$project$PitchIntervalQuizzer$view = function (model) {
 				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$text('Pitch Interval Quizzer v1.02')
+						$elm$html$Html$text('Pitch Interval Quizzer v1.03')
 					])),
-				A2(
-				$elm$html$Html$audio,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$src(url),
-						$elm$html$Html$Attributes$controls(true),
-						$elm$html$Html$Attributes$autoplay(true)
-					]),
-				_List_Nil),
+				$author$project$PitchIntervalQuizzer$renderTuningMode(model),
 				$author$project$PitchIntervalQuizzer$renderAnswers(model),
 				A2(
 				$elm$html$Html$button,
@@ -5682,10 +5786,10 @@ var $author$project$PitchIntervalQuizzer$view = function (model) {
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('NEXT MOVE')
+						$elm$html$Html$text('GO AGAIN!')
 					])),
 				A2(
-				$elm$html$Html$div,
+				$elm$html$Html$h1,
 				_List_Nil,
 				_List_fromArray(
 					[
