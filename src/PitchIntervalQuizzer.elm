@@ -1,9 +1,9 @@
-module PitchIntervalQuizzer exposing (..)
+port module PitchIntervalQuizzer exposing (..)
 
-import Browser exposing (..)
-import Html exposing (..)
-import Html.Attributes exposing (..)
-import Html.Events exposing (..)
+import Browser exposing (element)
+import Html exposing (Html, div, h4, text, button, audio, li, span)
+import Html.Attributes exposing (class, type_, autoplay, controls, src)
+import Html.Events exposing (onClick)
 import Array exposing (..)
 import Random
 
@@ -51,8 +51,8 @@ init i =
 
 type Msg
     = SetUserGuess Int
-    | RequestNewTones
-    | SetNewTones Int
+    | RequestNewInterval
+    | SetNewInterval Int
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -60,29 +60,31 @@ update msg model =
     case msg of
 
         SetUserGuess guess ->
-            case guess == model.pick of
-                True -> 
+            if guess == model.pick then
+
                     ( 
                         { model | userPick = guess, displayMessage = "YES.", score = model.score + 1 }, 
                         Cmd.none 
                     )
-                _ -> 
+                else
+
                     ( 
                         { model | userPick = guess, displayMessage = "NO.", score = model.score - 1 }, 
-                        Cmd.none 
+                        Cmd.none
                     )
 
-        RequestNewTones ->
-            ( model, generateRandom )
+        RequestNewInterval ->
+            ( model, generateRandomInterval )
 
-        SetNewTones n ->
-            ( { model | pick = n, userPick = 0, displayMessage = "" }, Cmd.none )
+        SetNewInterval interval ->
+            ( { model | pick = interval, userPick = 0, displayMessage = "" }, sineWave (1.0, 7/4) )
 
 
 
-generateRandom : Cmd Msg
-generateRandom =
-    Random.generate SetNewTones (Random.int 1 ((length toneArray)))
+generateRandomInterval : Cmd Msg
+generateRandomInterval =
+    Random.int 1 (length toneArray)
+    |> Random.generate SetNewInterval 
 
 
 view : Model -> Html Msg
@@ -105,11 +107,11 @@ view model =
             , renderAnswers model
             , button
                 [ type_ "button"
-                , onClick (RequestNewTones)
+                , onClick RequestNewInterval
                 ]
                 [ text "NEXT MOVE" ]
-            , div [] [ text (model.displayMessage) ]
-            , div [] [ text ("Score: " ++ (String.fromInt model.score)) ]
+            , div [] [ text model.displayMessage]
+            , div [] [ text ("Score: " ++ String.fromInt model.score) ]
             ]
 
 
@@ -129,19 +131,11 @@ displayPick model p =
             , div [] [ text ( String.fromChar high) ]
             ]
 
-
-renderTone : Int -> Html Msg
-renderTone t =
-    li []
-        [ text (String.fromInt t)
-        ]
-
-
 renderAnswer : Tone -> Html Msg
-renderAnswer tone =
+renderAnswer {index, label} =
     span []
-        [ button [ onClick (SetUserGuess tone.index) ]
-            [ text tone.label ]
+        [ button [ onClick (SetUserGuess index) ]
+            [ text label ]
         ]
 
 
@@ -167,3 +161,7 @@ main =
         , update = update
         , view = view
         }
+
+
+port sineWave : (Float, Float) -> Cmd msg
+port messageReceiver : (String -> msg) -> Sub msg
