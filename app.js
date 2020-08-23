@@ -5227,6 +5227,7 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$element = _Browser_element;
+var $author$project$PitchIntervalQuizzer$Easy = {$: 'Easy'};
 var $author$project$PitchIntervalQuizzer$Mean = {$: 'Mean'};
 var $author$project$PitchIntervalQuizzer$Tone = F3(
 	function (tones, ratio, intervalName) {
@@ -5360,11 +5361,28 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$PitchIntervalQuizzer$init = function (i) {
 	return _Utils_Tuple2(
-		{actualAnswer: 1 / 1, displayMessage: '', score: 0, toneArray: $author$project$PitchIntervalQuizzer$meanTones, tuningMode: $author$project$PitchIntervalQuizzer$Mean, userAnswer: 0.0},
+		{
+			actualAnswer: A3(
+				$author$project$PitchIntervalQuizzer$Tone,
+				_Utils_Tuple2(
+					_Utils_chr(' '),
+					_Utils_chr(' ')),
+				0.0,
+				''),
+			difficultyLevel: $author$project$PitchIntervalQuizzer$Easy,
+			displayMessage: '',
+			multipleChoices: _List_Nil,
+			score: 0,
+			toneArray: $author$project$PitchIntervalQuizzer$meanTones,
+			tuningMode: $author$project$PitchIntervalQuizzer$Mean,
+			userAnswer: 0.0
+		},
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
+var $author$project$PitchIntervalQuizzer$Hard = {$: 'Hard'};
+var $author$project$PitchIntervalQuizzer$Pure = {$: 'Pure'};
 var $author$project$PitchIntervalQuizzer$SetNewInterval = function (a) {
 	return {$: 'SetNewInterval', a: a};
 };
@@ -5517,11 +5535,84 @@ var $elm$random$Random$int = F2(
 				}
 			});
 	});
+var $elm$random$Random$map2 = F3(
+	function (func, _v0, _v1) {
+		var genA = _v0.a;
+		var genB = _v1.a;
+		return $elm$random$Random$Generator(
+			function (seed0) {
+				var _v2 = genA(seed0);
+				var a = _v2.a;
+				var seed1 = _v2.b;
+				var _v3 = genB(seed1);
+				var b = _v3.a;
+				var seed2 = _v3.b;
+				return _Utils_Tuple2(
+					A2(func, a, b),
+					seed2);
+			});
+	});
+var $elm$random$Random$pair = F2(
+	function (genA, genB) {
+		return A3(
+			$elm$random$Random$map2,
+			F2(
+				function (a, b) {
+					return _Utils_Tuple2(a, b);
+				}),
+			genA,
+			genB);
+	});
 var $author$project$PitchIntervalQuizzer$generateRandomInterval = function (len) {
 	return A2(
 		$elm$random$Random$generate,
 		$author$project$PitchIntervalQuizzer$SetNewInterval,
-		A2($elm$random$Random$int, 1, len));
+		A2(
+			$elm$random$Random$pair,
+			A2($elm$random$Random$int, 1, len),
+			A2($elm$random$Random$int, 1, len)));
+};
+var $author$project$PitchIntervalQuizzer$SetMultipleChoices = function (a) {
+	return {$: 'SetMultipleChoices', a: a};
+};
+var $elm$random$Random$listHelp = F4(
+	function (revList, n, gen, seed) {
+		listHelp:
+		while (true) {
+			if (n < 1) {
+				return _Utils_Tuple2(revList, seed);
+			} else {
+				var _v0 = gen(seed);
+				var value = _v0.a;
+				var newSeed = _v0.b;
+				var $temp$revList = A2($elm$core$List$cons, value, revList),
+					$temp$n = n - 1,
+					$temp$gen = gen,
+					$temp$seed = newSeed;
+				revList = $temp$revList;
+				n = $temp$n;
+				gen = $temp$gen;
+				seed = $temp$seed;
+				continue listHelp;
+			}
+		}
+	});
+var $elm$random$Random$list = F2(
+	function (n, _v0) {
+		var gen = _v0.a;
+		return $elm$random$Random$Generator(
+			function (seed) {
+				return A4($elm$random$Random$listHelp, _List_Nil, n, gen, seed);
+			});
+	});
+var $author$project$PitchIntervalQuizzer$generateRandomMultipleChoices = function (len) {
+	return A2(
+		$elm$random$Random$generate,
+		$author$project$PitchIntervalQuizzer$SetMultipleChoices,
+		A2(
+			$elm$random$Random$list,
+			3,
+			A2($elm$random$Random$int, 1, len)));
 };
 var $elm$core$Array$bitMask = 4294967295 >>> (32 - $elm$core$Array$shiftStep);
 var $elm$core$Basics$ge = _Utils_ge;
@@ -5567,6 +5658,94 @@ var $elm$core$Array$length = function (_v0) {
 	var len = _v0.a;
 	return len;
 };
+var $author$project$PitchIntervalQuizzer$pureTones = $elm$core$Array$fromList(
+	_List_fromArray(
+		[
+			A3(
+			$author$project$PitchIntervalQuizzer$Tone,
+			_Utils_Tuple2(
+				_Utils_chr('C'),
+				_Utils_chr('D')),
+			9 / 8,
+			'Minor Second'),
+			A3(
+			$author$project$PitchIntervalQuizzer$Tone,
+			_Utils_Tuple2(
+				_Utils_chr('C'),
+				_Utils_chr('D')),
+			9 / 8,
+			'Major Second'),
+			A3(
+			$author$project$PitchIntervalQuizzer$Tone,
+			_Utils_Tuple2(
+				_Utils_chr('D'),
+				_Utils_chr('F')),
+			6 / 5,
+			'Minor Third'),
+			A3(
+			$author$project$PitchIntervalQuizzer$Tone,
+			_Utils_Tuple2(
+				_Utils_chr('C'),
+				_Utils_chr('E')),
+			5 / 4,
+			'Major Third'),
+			A3(
+			$author$project$PitchIntervalQuizzer$Tone,
+			_Utils_Tuple2(
+				_Utils_chr('C'),
+				_Utils_chr('F')),
+			4 / 3,
+			'Fourth'),
+			A3(
+			$author$project$PitchIntervalQuizzer$Tone,
+			_Utils_Tuple2(
+				_Utils_chr('F'),
+				_Utils_chr('B')),
+			45 / 32,
+			'TRITONE!'),
+			A3(
+			$author$project$PitchIntervalQuizzer$Tone,
+			_Utils_Tuple2(
+				_Utils_chr('C'),
+				_Utils_chr('G')),
+			3 / 2,
+			'Fifth'),
+			A3(
+			$author$project$PitchIntervalQuizzer$Tone,
+			_Utils_Tuple2(
+				_Utils_chr('E'),
+				_Utils_chr('C')),
+			8 / 5,
+			'Minor Sixth'),
+			A3(
+			$author$project$PitchIntervalQuizzer$Tone,
+			_Utils_Tuple2(
+				_Utils_chr('C'),
+				_Utils_chr('A')),
+			5 / 3,
+			'Major Sixth'),
+			A3(
+			$author$project$PitchIntervalQuizzer$Tone,
+			_Utils_Tuple2(
+				_Utils_chr('C'),
+				_Utils_chr('A')),
+			5 / 3,
+			'Minor Seventh'),
+			A3(
+			$author$project$PitchIntervalQuizzer$Tone,
+			_Utils_Tuple2(
+				_Utils_chr('C'),
+				_Utils_chr('B')),
+			15 / 8,
+			'Major Seventh'),
+			A3(
+			$author$project$PitchIntervalQuizzer$Tone,
+			_Utils_Tuple2(
+				_Utils_chr('C'),
+				_Utils_chr('C')),
+			2 / 1,
+			'Octave')
+		]));
 var $elm$json$Json$Encode$float = _Json_wrap;
 var $elm$json$Json$Encode$list = F2(
 	function (func, entries) {
@@ -5591,12 +5770,65 @@ var $author$project$PitchIntervalQuizzer$sineWave = _Platform_outgoingPort(
 					$elm$json$Json$Encode$float(b)
 				]));
 	});
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
 var $author$project$PitchIntervalQuizzer$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
+			case 'SetMultipleChoices':
+				var list = msg.a;
+				var tones = A2(
+					$elm$core$List$map,
+					function (a) {
+						return A2(
+							$elm$core$Maybe$withDefault,
+							A3(
+								$author$project$PitchIntervalQuizzer$Tone,
+								_Utils_Tuple2(
+									_Utils_chr(' '),
+									_Utils_chr(' ')),
+								0.0,
+								''),
+							A2($elm$core$Array$get, a - 1, model.toneArray));
+					},
+					list);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{multipleChoices: tones}),
+					$elm$core$Platform$Cmd$none);
+			case 'SetTuningMode':
+				var tuningMode = msg.a;
+				return _Utils_eq(tuningMode, $author$project$PitchIntervalQuizzer$Pure) ? _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{toneArray: $author$project$PitchIntervalQuizzer$pureTones, tuningMode: $author$project$PitchIntervalQuizzer$Pure}),
+					$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{toneArray: $author$project$PitchIntervalQuizzer$meanTones, tuningMode: $author$project$PitchIntervalQuizzer$Mean}),
+					$elm$core$Platform$Cmd$none);
+			case 'SetDifficultyLevel':
+				var difficultyLevel = msg.a;
+				return _Utils_eq(difficultyLevel, $author$project$PitchIntervalQuizzer$Easy) ? _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{difficultyLevel: $author$project$PitchIntervalQuizzer$Easy}),
+					$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{difficultyLevel: $author$project$PitchIntervalQuizzer$Hard}),
+					$elm$core$Platform$Cmd$none);
 			case 'SetUserGuess':
 				var guess = msg.a;
-				return _Utils_eq(guess, model.actualAnswer) ? _Utils_Tuple2(
+				return _Utils_eq(guess, model.actualAnswer.ratio) ? _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{displayMessage: 'YES.', score: model.score + 1}),
@@ -5608,26 +5840,57 @@ var $author$project$PitchIntervalQuizzer$update = F2(
 			case 'RequestNewInterval':
 				return _Utils_Tuple2(
 					model,
-					$author$project$PitchIntervalQuizzer$generateRandomInterval(
-						$elm$core$Array$length(model.toneArray)));
+					$elm$core$Platform$Cmd$batch(
+						_List_fromArray(
+							[
+								$author$project$PitchIntervalQuizzer$generateRandomInterval(
+								$elm$core$Array$length(model.toneArray)),
+								$author$project$PitchIntervalQuizzer$generateRandomMultipleChoices(
+								$elm$core$Array$length(model.toneArray))
+							])));
+			case 'Replay':
+				var offset = msg.a;
+				var ratio = msg.b;
+				var command = _Utils_eq(model.difficultyLevel, $author$project$PitchIntervalQuizzer$Easy) ? $author$project$PitchIntervalQuizzer$sineWave(
+					_Utils_Tuple2(1.0, ratio)) : $author$project$PitchIntervalQuizzer$sineWave(
+					_Utils_Tuple2(offset, ratio));
+				return _Utils_Tuple2(model, command);
 			default:
-				var interval = msg.a;
-				var tone = A2($elm$core$Array$get, interval - 1, model.toneArray);
-				var actual = function () {
-					if (tone.$ === 'Nothing') {
+				var _v1 = msg.a;
+				var a = _v1.a;
+				var b = _v1.b;
+				var root = A2($elm$core$Array$get, a - 1, model.toneArray);
+				var offset = function () {
+					if (root.$ === 'Nothing') {
 						return 0.0;
 					} else {
-						var x = tone.a;
+						var x = root.a;
 						return x.ratio;
 					}
 				}();
+				var actual = A2(
+					$elm$core$Maybe$withDefault,
+					A3(
+						$author$project$PitchIntervalQuizzer$Tone,
+						_Utils_Tuple2(
+							_Utils_chr(' '),
+							_Utils_chr(' ')),
+						0.0,
+						''),
+					A2($elm$core$Array$get, b - 1, model.toneArray));
+				var command = _Utils_eq(model.difficultyLevel, $author$project$PitchIntervalQuizzer$Easy) ? $author$project$PitchIntervalQuizzer$sineWave(
+					_Utils_Tuple2(1.0, actual.ratio)) : $author$project$PitchIntervalQuizzer$sineWave(
+					_Utils_Tuple2(offset, actual.ratio));
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{actualAnswer: actual, displayMessage: '', userAnswer: 0.0}),
-					$author$project$PitchIntervalQuizzer$sineWave(
-						_Utils_Tuple2(1.0, actual)));
+					command);
 		}
+	});
+var $author$project$PitchIntervalQuizzer$Replay = F2(
+	function (a, b) {
+		return {$: 'Replay', a: a, b: b};
 	});
 var $author$project$PitchIntervalQuizzer$RequestNewInterval = {$: 'RequestNewInterval'};
 var $elm$html$Html$button = _VirtualDom_node('button');
@@ -5696,7 +5959,9 @@ var $author$project$PitchIntervalQuizzer$renderAnswers = function (model) {
 			$author$project$PitchIntervalQuizzer$renderAnswer,
 			$elm$core$Array$toList(model.toneArray)));
 };
-var $author$project$PitchIntervalQuizzer$Pure = {$: 'Pure'};
+var $author$project$PitchIntervalQuizzer$SetDifficultyLevel = function (a) {
+	return {$: 'SetDifficultyLevel', a: a};
+};
 var $elm$json$Json$Encode$bool = _Json_wrap;
 var $elm$html$Html$Attributes$boolProperty = F2(
 	function (key, bool) {
@@ -5712,6 +5977,95 @@ var $elm$html$Html$label = _VirtualDom_node('label');
 var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $author$project$PitchIntervalQuizzer$renderDifficultyLevel = function (model) {
+	return A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$label,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$for('difficultyLevel')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('EASY')
+					])),
+				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$type_('radio'),
+						$elm$html$Html$Events$onClick(
+						$author$project$PitchIntervalQuizzer$SetDifficultyLevel($author$project$PitchIntervalQuizzer$Easy)),
+						$elm$html$Html$Attributes$name('difficultyLevel'),
+						$elm$html$Html$Attributes$value('easy'),
+						$elm$html$Html$Attributes$checked(
+						_Utils_eq(model.difficultyLevel, $author$project$PitchIntervalQuizzer$Easy))
+					]),
+				_List_Nil),
+				A2(
+				$elm$html$Html$label,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$for('difficultyLevel')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('HARD')
+					])),
+				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$type_('radio'),
+						$elm$html$Html$Events$onClick(
+						$author$project$PitchIntervalQuizzer$SetDifficultyLevel($author$project$PitchIntervalQuizzer$Hard)),
+						$elm$html$Html$Attributes$name('difficultyLevel'),
+						$elm$html$Html$Attributes$value('mean'),
+						$elm$html$Html$Attributes$checked(
+						_Utils_eq(model.difficultyLevel, $author$project$PitchIntervalQuizzer$Hard))
+					]),
+				_List_Nil)
+			]));
+};
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+		}
+	});
+var $elm$html$Html$li = _VirtualDom_node('li');
+var $author$project$PitchIntervalQuizzer$renderMultpleChoice = function (tone) {
+	return A2(
+		$elm$html$Html$li,
+		_List_Nil,
+		_List_fromArray(
+			[
+				$elm$html$Html$text(tone.intervalName)
+			]));
+};
+var $elm$html$Html$ul = _VirtualDom_node('ul');
+var $author$project$PitchIntervalQuizzer$renderMultpleChoices = function (model) {
+	return A2(
+		$elm$html$Html$ul,
+		_List_Nil,
+		A2(
+			$elm$core$List$map,
+			$author$project$PitchIntervalQuizzer$renderMultpleChoice,
+			A2(
+				$elm$core$List$append,
+				_List_fromArray(
+					[model.actualAnswer]),
+				model.multipleChoices)));
+};
+var $author$project$PitchIntervalQuizzer$SetTuningMode = function (a) {
+	return {$: 'SetTuningMode', a: a};
+};
 var $author$project$PitchIntervalQuizzer$renderTuningMode = function (model) {
 	return A2(
 		$elm$html$Html$div,
@@ -5733,6 +6087,8 @@ var $author$project$PitchIntervalQuizzer$renderTuningMode = function (model) {
 				_List_fromArray(
 					[
 						$elm$html$Html$Attributes$type_('radio'),
+						$elm$html$Html$Events$onClick(
+						$author$project$PitchIntervalQuizzer$SetTuningMode($author$project$PitchIntervalQuizzer$Pure)),
 						$elm$html$Html$Attributes$name('tuningMode'),
 						$elm$html$Html$Attributes$value('pure'),
 						$elm$html$Html$Attributes$checked(
@@ -5741,7 +6097,10 @@ var $author$project$PitchIntervalQuizzer$renderTuningMode = function (model) {
 				_List_Nil),
 				A2(
 				$elm$html$Html$label,
-				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$for('tuningMode')
+					]),
 				_List_fromArray(
 					[
 						$elm$html$Html$text('Mean intonation')
@@ -5751,6 +6110,8 @@ var $author$project$PitchIntervalQuizzer$renderTuningMode = function (model) {
 				_List_fromArray(
 					[
 						$elm$html$Html$Attributes$type_('radio'),
+						$elm$html$Html$Events$onClick(
+						$author$project$PitchIntervalQuizzer$SetTuningMode($author$project$PitchIntervalQuizzer$Mean)),
 						$elm$html$Html$Attributes$name('tuningMode'),
 						$elm$html$Html$Attributes$value('mean'),
 						$elm$html$Html$Attributes$checked(
@@ -5776,6 +6137,8 @@ var $author$project$PitchIntervalQuizzer$view = function (model) {
 						$elm$html$Html$text('Pitch Interval Quizzer v1.03')
 					])),
 				$author$project$PitchIntervalQuizzer$renderTuningMode(model),
+				$author$project$PitchIntervalQuizzer$renderDifficultyLevel(model),
+				$author$project$PitchIntervalQuizzer$renderMultpleChoices(model),
 				$author$project$PitchIntervalQuizzer$renderAnswers(model),
 				A2(
 				$elm$html$Html$button,
@@ -5786,7 +6149,19 @@ var $author$project$PitchIntervalQuizzer$view = function (model) {
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('GO AGAIN!')
+						$elm$html$Html$text('NEXT')
+					])),
+				A2(
+				$elm$html$Html$button,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$type_('button'),
+						$elm$html$Html$Events$onClick(
+						A2($author$project$PitchIntervalQuizzer$Replay, 1.0, model.actualAnswer.ratio))
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('REPEAT')
 					])),
 				A2(
 				$elm$html$Html$h1,
